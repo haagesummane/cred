@@ -59,9 +59,9 @@ class OpCodeSimulatorTest(unittest.TestCase):
 
 opc = OpCodeSimulatorTest()
 opc.test_set_instructions()
-# opc.test_add_value_instructions()
+opc.test_add_value_instructions()
 opc.test_add_register_instructions()
 opc.test_mov_register_instructions()
 opc.test_inc_dec_register_instructions()
 opc.test_reset_register_instructions()
-# opc.test_multiple_instructions_with_no_op()
+opc.test_multiple_instructions_with_no_op()
