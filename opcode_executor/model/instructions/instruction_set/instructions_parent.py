@@ -14,12 +14,13 @@ class InstructionsParent:
         self.DISALLOWED_REGISTERS: Set[str] = None
 
     def inst_specific_checks(self, params: List) -> bool:
-        return True
+        raise Exception('Not implemented!')# must be implemented in child
 
     def validate(self, params: List):
         if len(params) == self.NUM_INP_PARAMS:
             if params[0] not in self.DISALLOWED_REGISTERS:
-                return True
+                if self.inst_specific_checks(params):
+                    return True
 
     def config_checks(self):
         if None in {self.INSTR_NAME, self.NUM_INP_PARAMS}:

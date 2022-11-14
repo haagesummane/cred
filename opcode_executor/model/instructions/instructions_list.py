@@ -1,8 +1,10 @@
 from dataclasses import dataclass
-from typing import Set, List, Optional, Dict
+from typing import List, Optional, Dict
 import logging
 
-from opcode_executor.model.instructions.instructions_parent import InstructionsParent
+from opcode_executor.model.instructions.instruction_set import AVAILABLE_INST
+from opcode_executor.model.instructions.instruction_set.instructions_parent import InstructionsParent
+from opcode_executor.model.register_state import RegisterState
 
 
 @dataclass
@@ -12,24 +14,31 @@ class IllegalInstruction:
 
 
 class InstructionsList:
-    def __init__(self, allowed_instructions: Dict[str, InstructionsParent], sep: Optional[str] = ' ',
+    def __init__(self, disallowed_instructions: Optional[Dict[str, InstructionsParent]] = dict({}),
+                 sep: Optional[str] = ' ',
                  illegal_inst: IllegalInstruction = IllegalInstruction.FAIL):
-        self.allowed_inst = allowed_instructions
+        self.disallowed_inst = disallowed_instructions
         self.separator = sep
         self.on_illegal_instruction = illegal_inst
         self.parsed_instructions = None
+        self.instruction_objs = {a: AVAILABLE_INST[a]() for a in AVAILABLE_INST}
 
-    def parse_inst(self, inst_str: str) -> InstructionsParent:
+    def parse_inst(self, inst_str: str) -> [InstructionsParent, List]:
         args = list(map(lambda s: s.strip(), inst_str.split(self.separator)))
         inst = args[0].upper()
-        if inst not in self.allowed_inst:
+        if inst in self.disallowed_inst:
             if self.on_illegal_instruction == IllegalInstruction.FAIL:
                 raise Exception("Instruction not found in allowed instruction set!")
             if self.on_illegal_instruction == IllegalInstruction.SKIP:
                 logging.warning(f'skipping illegal instruction {inst} => {inst_str}')
 
-        return self.allowed_inst[inst](args[1:])
+        return self.instruction_objs[inst], args[1:]
 
-    def parse_instructions(self, instructions: List[str]) -> List[InstructionsParent]:
+    def parse_instructions(self, instructions: List[str]) -> [InstructionsParent, List]:
         self.parsed_instructions = list(map(self.parse_inst, instructions))
         return self.parsed_instructions
+
+    def execute(self, registers: RegisterState):
+        inst_lst = self.parsed_instructions  # if parsed_inst_lst is None else parsed_inst_lst
+        for inst in inst_lst:
+            inst[0].execute(params=inst[1], registers=registers)

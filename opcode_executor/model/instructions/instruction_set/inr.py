@@ -1,9 +1,10 @@
 from typing import List
 
+from opcode_executor.model.instructions.instruction_set.instructions_parent import InstructionsParent
 from opcode_executor.model.register_state import RegisterState
 
 
-class INR:
+class INR(InstructionsParent):
     def __init__(self):
         self.NUM_INP_PARAMS = 1
         self.INSTR_NAME = self.__class__.__name__
@@ -13,6 +14,7 @@ class INR:
         return True  # come back later
 
     def execute(self, params: List, registers: RegisterState):
+        self.validate(params)
         r = registers.get_register(params[0])
         r.set_value(r.value+1)
         registers.update_state(r)
