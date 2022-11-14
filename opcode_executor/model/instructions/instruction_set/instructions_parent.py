@@ -19,7 +19,7 @@ class InstructionsParent:
     def validate(self, params: List):
         if len(params) == self.NUM_INP_PARAMS:
             if len(params) > 0:
-                if params[0] not in self.DISALLOWED_REGISTERS:
+                if params[0] not in self.DISALLOWED_REGISTERS: # not complete
                     if self.inst_specific_checks(params):
                         return True
             return True

@@ -11,10 +11,10 @@ class OpcodeSimulator(ABC):
     def __init__(self):
         self.allowed_instructions_ = []
         self.register_names = ['A', 'B', 'C', 'D']
+        self.registers = RegisterState([Register(name) for name in self.register_names])
 
     def execute(self, instructions: List[str]) -> RegisterState:
-        registers = RegisterState([Register(name) for name in self.register_names])
         inst_list = InstructionsList()
         inst_list.parse_instructions(instructions)
-        inst_list.execute(registers)
-        return registers
+        inst_list.execute(self.registers)
+        return self.registers
