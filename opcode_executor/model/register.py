@@ -1,7 +1,11 @@
+from typing import Optional, List
+
+
 class Register:
-    def __init__(self, name: str):
+    def __init__(self, name: str, disabled_instructions:Optional[List[Instruction]]):
         self.__name__ = name
         self.__value__ = 0
+        self.__disabled_instructions__ = disabled_instructions
 
     @property
     def name(self):
@@ -11,5 +15,6 @@ class Register:
     def value(self):
         return self.__value__
 
+    @value.setter
     def set_value(self, value):
         self.__value__ = value
