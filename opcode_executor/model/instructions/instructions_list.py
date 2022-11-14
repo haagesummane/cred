@@ -16,7 +16,7 @@ class IllegalInstruction:
 class InstructionsList:
     def __init__(self, disallowed_instructions: Optional[Dict[str, InstructionsParent]] = dict({}),
                  sep: Optional[str] = ' ',
-                 illegal_inst: IllegalInstruction = IllegalInstruction.FAIL):
+                 illegal_inst: IllegalInstruction = IllegalInstruction.SKIP):
         self.disallowed_inst = disallowed_instructions
         self.separator = sep
         self.on_illegal_instruction = illegal_inst
@@ -26,16 +26,17 @@ class InstructionsList:
     def parse_inst(self, inst_str: str) -> [InstructionsParent, List]:
         args = list(map(lambda s: s.strip(), inst_str.split(self.separator)))
         inst = args[0].upper()
-        if inst in self.disallowed_inst:
+        if inst in self.disallowed_inst or inst not in self.instruction_objs:
             if self.on_illegal_instruction == IllegalInstruction.FAIL:
                 raise Exception("Instruction not found in allowed instruction set!")
             if self.on_illegal_instruction == IllegalInstruction.SKIP:
-                logging.warning(f'skipping illegal instruction {inst} => {inst_str}')
+                logging.warning(f'skipping illegal instruction {inst_str}')
+                return None
 
         return self.instruction_objs[inst], args[1:]
 
     def parse_instructions(self, instructions: List[str]) -> [InstructionsParent, List]:
-        self.parsed_instructions = list(map(self.parse_inst, instructions))
+        self.parsed_instructions = list(filter(None, list(map(self.parse_inst, instructions))))
         return self.parsed_instructions
 
     def execute(self, registers: RegisterState):

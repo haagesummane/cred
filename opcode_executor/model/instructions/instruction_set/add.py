@@ -16,6 +16,5 @@ class ADD(InstructionsParent):
     def execute(self, params: List, registers: RegisterState):
         self.validate(params)
         r1 = registers.get_register(params[0])
-        r2 = registers.get_register(params[1])
-        r1.set_value(r1.value + r2.value)
+        r1.set_value(r1.value + int(params[1]))
         registers.update_state(r1)
