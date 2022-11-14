@@ -15,3 +15,6 @@
 additionally, could also go into defining or restricting what registers can/cannot be used with what operations
 make a parsed instruction list which can allow/disallow instructions
   - how to handle disallowed instructions? (skip or throw error?)
+
+
+disallow instructions from a register and not other way around since different situations may have diff set of registers

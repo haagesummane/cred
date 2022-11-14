@@ -1,22 +1,31 @@
-from typing import List
+from typing import List, Dict, Set
+
+from opcode_executor.model.register import Register
+from opcode_executor.model.register_state import RegisterState
 
 
 class InstructionsParent:
-    def __init__(self, params: List):
+    def __init__(self, ins_str: str, params: List):
         self.params = params
-        self.num_inp_params = None
-        self.instr_name = None  # ideally this should be equal to self.__class__.__name__
+        self.ins_str = ins_str
 
-    def config_checks(self):
-        if self.instr_name != self.instr_name.upper():
-            raise Exception('Developer WARNING: All instruction names should be in upper case!')
+        self.NUM_INP_PARAMS = None
+        self.INSTR_NAME = None  # ideally this should be equal to self.__class__.__name__
+        self.DISALLOWED_REGISTERS: Set[str] = None
 
-    @property
-    def instruction(self, ins_str: str):
-        self.instruction = self.parse(ins_str)
+    def inst_specific_checks(self, params: List) -> bool:
+        return True
 
     def validate(self, params: List):
-        raise Exception("instruction_parent.validate must be implemented!")
+        if len(params) == self.NUM_INP_PARAMS:
+            if params[0] not in self.DISALLOWED_REGISTERS:
+                return True
 
-    def execute(self, params: List):
+    def config_checks(self):
+        if None in {self.INSTR_NAME, self.NUM_INP_PARAMS}:
+            raise Exception("Developer ERROR: INSTR_NAME and NUM_INP_PARAMS must be defined")
+        if self.INSTR_NAME != self.INSTR_NAME.upper():
+            raise Exception('Developer ERROR: All instruction names should be in upper case!')
+
+    def execute(self, params: List, registers: RegisterState):
         raise Exception("instruction_parent.execute must be implemented!")
