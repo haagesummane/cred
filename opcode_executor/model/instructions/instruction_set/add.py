@@ -1,9 +1,10 @@
 from typing import List
 
+from opcode_executor.model.instructions.instruction_set.instructions_parent import InstructionsParent
 from opcode_executor.model.register_state import RegisterState
 
 
-class ADD:
+class ADD(InstructionsParent):
     def __init__(self):
         self.NUM_INP_PARAMS = 1
         self.INSTR_NAME = self.__class__.__name__

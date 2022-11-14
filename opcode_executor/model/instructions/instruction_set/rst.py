@@ -10,6 +10,9 @@ class RST(InstructionsParent):
         self.INSTR_NAME = self.__class__.__name__
         self.DISALLOWED_REGISTERS = {}
 
+    def inst_specific_checks(self, params: List) -> bool:
+        return True  # come back later
+
     def execute(self, params: List, registers: RegisterState):
         self.validate(params)
         registers.reset()

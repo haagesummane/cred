@@ -41,4 +41,5 @@ class InstructionsList:
     def execute(self, registers: RegisterState):
         inst_lst = self.parsed_instructions  # if parsed_inst_lst is None else parsed_inst_lst
         for inst in inst_lst:
+            # print(inst)
             inst[0].execute(params=inst[1], registers=registers)

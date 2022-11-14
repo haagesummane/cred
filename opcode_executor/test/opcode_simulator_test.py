@@ -4,9 +4,13 @@ from opcode_executor.service.opcode_simulator import OpcodeSimulator
 
 
 class OpCodeSimulatorTest(unittest.TestCase):
-    def setUp(self) -> None:
-        # TODO initiate the class
+    def __init__(self):
+        super(OpCodeSimulatorTest, self).__init__()
         self.opcode_simulator = OpcodeSimulator()
+
+    # def setUp(self) -> None:
+    #     # TODO initiate the class
+    #     self.opcode_simulator = OpcodeSimulator()
 
     def test_set_instructions(self):
         instructions = ["RST", "SET A 1", "SET B -2", "SET C 3", "SET D 4"]
@@ -51,3 +55,13 @@ class OpCodeSimulatorTest(unittest.TestCase):
         state = self.opcode_simulator.execute(instructions)
         self.assertEqual(11, state.get_register('A').value)
         self.assertEqual(25, state.get_register('B').value)
+
+
+opc = OpCodeSimulatorTest()
+opc.test_set_instructions()
+# opc.test_add_value_instructions()
+opc.test_add_register_instructions()
+opc.test_mov_register_instructions()
+opc.test_inc_dec_register_instructions()
+opc.test_reset_register_instructions()
+# opc.test_multiple_instructions_with_no_op()
